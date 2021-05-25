@@ -275,3 +275,67 @@ function Welcome(props) {
 // the result. 
 // 4. React DOM efficiently updates the DOM to match <h1> Hello, Sara</h1>
 
+
+
+
+//              Composing Components
+// Components can refer to other components in their output
+// This lets us use the same component abstraction for any level of detail
+// A button, a form, a dialog, a screen: in React apps, all those are commonly
+// expressed as components
+
+// For example we can create an App component that renders Welcome many times:
+
+// Creates a component/function called Welcome that accepts props
+// & returns html 
+function Welcome(props) {
+    return <h1>Hello, {props.name}</h1>;
+  }
+  
+  // Creates a function called App that returns a div
+  // The div is filled with Welcome component with different name
+  // properties 
+  function App() {
+    return (
+        // Welcome component with name being passed in as props. 
+      <div>
+        <Welcome name="Sara" />
+        <Welcome name="Cahal" />
+        <Welcome name="Edite" />
+      </div>
+    );
+  }
+  
+  // Calling React DOM to render the App & grab the root element by ID. 
+  ReactDOM.render(
+    <App />,
+    document.getElementById('root')
+  );
+
+
+  //                    EXTRACTING COMPONENTS
+  
+  // Don't be afraid to split components into smaller components
+  // For example, consider this comment component
+
+  function Comment(props) {
+    return (
+      <div className="Comment">
+        <div className="UserInfo">
+          <img className="Avatar"
+            src={props.author.avatarUrl}
+            alt={props.author.name}
+          />
+          <div className="UserInfo-name">
+            {props.author.name}
+          </div>
+        </div>
+        <div className="Comment-text">
+          {props.text}
+        </div>
+        <div className="Comment-date">
+          {formatDate(props.date)}
+        </div>
+      </div>
+    );
+  }
