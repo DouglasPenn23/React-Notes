@@ -317,6 +317,8 @@ function Welcome(props) {
   
   // Don't be afraid to split components into smaller components
   // For example, consider this comment component
+  // It accepts author (an object), text(a string) & a date as props and 
+  // describes a comment on a social media website.
 
   function Comment(props) {
     return (
@@ -326,6 +328,85 @@ function Welcome(props) {
             src={props.author.avatarUrl}
             alt={props.author.name}
           />
+          <div className="UserInfo-name">
+            {props.author.name}
+          </div>
+        </div>
+        <div className="Comment-text">
+          {props.text}
+        </div>
+        <div className="Comment-date">
+          {formatDate(props.date)}
+        </div>
+      </div>
+    );
+  }
+
+  // This component can be tricky to change because of all the nesting
+  // it is also hard to reuse individual parts of it. 
+  // Let's extract a few components from it. 
+
+  // First we will extract Avatar.
+  
+  // Commented
+  // Creates a function called avatar that takes in props
+  function Avatar(props) {
+      // returns the image 
+    return (
+        // Says to return img with classname avatar and props being
+        // the avatarurl & username.
+      <img className="Avatar"
+        src={props.user.avatarUrl}
+        alt={props.user.name}
+      />
+    );
+  }
+
+  // UnCommented
+  function Avatar(props) {
+    return (
+      <img className="Avatar"
+        src={props.user.avatarUrl}
+        alt={props.user.name}
+      />
+    );
+  }
+
+  // The avatar doesn't need to know that it is being rendered inside a
+  // comment. 
+  // This is why we have given its prop a more gener name: user 
+  // rather than author. 
+
+  // We can now simplify Comment a tiny bit
+  // Uncommented
+  function Comment(props) {
+    return (
+      <div className="Comment">
+        <div className="UserInfo">
+          <Avatar user={props.author} />
+          <div className="UserInfo-name">
+            {props.author.name}
+          </div>
+        </div>
+        <div className="Comment-text">
+          {props.text}
+        </div>
+        <div className="Comment-date">
+          {formatDate(props.date)}
+        </div>
+      </div>
+    );
+  }
+  
+
+  // Commented Version 
+  // Function or component called comment that takes in props
+  function Comment(props) {
+      // returns a div element
+    return (
+      <div className="Comment">
+        <div className="UserInfo">
+          <Avatar user={props.author} />
           <div className="UserInfo-name">
             {props.author.name}
           </div>
