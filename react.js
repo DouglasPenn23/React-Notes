@@ -376,6 +376,7 @@ function Welcome(props) {
   // comment. 
   // This is why we have given its prop a more gener name: user 
   // rather than author. 
+  // Things returned are encased in parantheses
 
   // We can now simplify Comment a tiny bit
   // Uncommented
@@ -403,7 +404,9 @@ function Welcome(props) {
   // Function or component called comment that takes in props
   function Comment(props) {
       // returns a div element
+      // Basically just a bunch of divs to render specific props
     return (
+      // Div w/ class name comment
       <div className="Comment">
         <div className="UserInfo">
           <Avatar user={props.author} />
@@ -420,3 +423,162 @@ function Welcome(props) {
       </div>
     );
   }
+
+  // Here we're going to extract a UserInfo Component that renders an Avatar
+  // Next to the user's name. 
+
+  function UserInfo(props){
+    return (
+      <div className="Userinfo">
+        <Avatar user={props.user}/>
+        <div className="UserInfo-name">
+          {props.user.name}
+        </div>
+      </div>
+    );
+  }
+
+
+  // Now we're going to simplify the comment further
+  function Comment(props) {
+    return (
+      <div className="Comment">
+        <UserInfo user={props.author} />
+        <div className="Comment-text">
+          {props.text}
+        </div>
+        <div className="Comment-date">
+          {formatDate(props.date)}
+        </div>
+      </div>
+    );
+  }
+
+  // Extracting components might seem like grunt work at first but having
+  // a palette of reusable components pays off in larger apps. 
+
+  // A good rule of thumb is that if a part of your UI is used several times
+  // (Button, Panel, Avatar) or is complex enough on it's own
+  // (App, FeedStory, Comment) it is a good condidate to be extracted to a 
+  // seperate component.
+
+  // Props are read-only.
+  // Whether a component is a function or a class, it must never
+  //modify it's own props
+
+  function sum(a, b) {
+    return a + b;
+  }
+
+  // Such above functions are called "pure" because they do not attempt
+  // to change their inputs and always 
+  // return the same result for the same inputs.
+
+
+
+  // State & Lifecycle
+
+  // Ticking Clock Example
+  // Creates a function called tick
+  // Is just html with data rendered w/in
+  function tick() {
+    const element = (
+      <div>
+        <h1>Hello, world!</h1>
+        <h2>It is {new Date().toLocaleTimeString()}.</h2>
+      </div>
+    );
+    ReactDOM.render(
+      element,
+      document.getElementById('root')
+    );
+  }
+  
+  setInterval(tick, 1000);
+
+// In next section we will learn how to make the clock component truly
+// reuseable & encapsulated
+// It will set up it's own timer & update itself every second
+
+
+// We'll start by encapsulating how the clock looks:
+
+// Creates a function called clock
+// This function updates the H2 to the current time.
+function Clock(props){
+  return(
+    <div>
+      <h1>Hello, World!</h1>
+      <h2>It is {props.date.toLocaleTimeString()}.</h2>
+    </div>
+  )
+}
+
+// Creates a tick function that updates the clock 
+function tick(){
+  ReactDOM.render(
+    <Clock date={new Date()} />
+    document.getElementById('root')
+  );
+}
+
+setInterval(tick, 1000);
+
+// However, this misses a crucial requirement. 
+// The fact that the clock sets up a timer & updates the
+// Ui every second should be an implementation detail of the clock. 
+
+
+// Ideally we want to write this once and have the Clock update itself. 
+ReactDOM.render(
+  <Clock />,
+  document.getElementById('root')
+);
+
+// To do this we need to add state to the clock component. 
+// State is similar to props, but it is private and fully controlled
+// by the component. 
+
+
+
+//                CONVERTING A FUNCTION TO A CLASS
+// 1. Create an ES6 class with the same name that extend React.Component
+// 2. Add a single empty method to it called render()
+// 3. Move the body of the function into the render() method.
+// 4. Replace props with this.props in the render() body. 
+// 5. Delete the remaining empty function declaration.
+
+
+// Creates a class called Clock that extends React Component
+class Clock extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>Hello, world!</h1>
+        <h2>It is {this.props.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
+// Clock is now defined as a class rather than a function
+// The render method will be called each time an update happens but as 
+// long as we render <Clock /> into the same DOM node, only a single
+// instance of the Clock class will be used. This lets us use additional 
+// features such as local state & lifecycle methods. 
+
+class Clock extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>Hello, world!</h1>
+        <h2>It is {this.props.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
+
+// Clock is now defined as a class rather than a function. 
+// The render method will be called each time an update happens, 
+// but as long as we render <Clock /> into the same DOM node, only a
+// single instance of the Clock class will be used. This 
+// lets us use additional features such as local state & lifecycle methods.
