@@ -32,3 +32,11 @@ switch (card){
       // If count is less than 0. 
     return count + " Hold";
   }
+
+
+  // Creates an object
+  var testObj = {
+    "hat": "ballcap",
+    "shirt": "jersey",
+    "shoes": "cleats"
+  };
